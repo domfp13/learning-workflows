@@ -1,0 +1,48 @@
+{
+    "name": "workflow",
+    "build": {
+        "dockerfile": "./Dockerfile",
+        "context": "."
+    },
+    "hostRequirements": {
+        "cpus": 4,
+        "memory": "2gb",
+        "storage": "10gb"
+    },
+    "portsAttributes": {
+        "443": {
+            "label": "https"
+        }
+    },
+    "forwardPorts": [443],
+    "waitFor": "onCreateCommand",
+    "customizations": {
+        "codespaces": {
+            "openFiles": ["./README.md"]
+        },
+        "vscode": {
+            "settings": {
+                "python.defaultInterpreterPath": "/home/workflow/.conda/envs/workflow-environment/bin/python",
+                "python.linting.enabled": true,
+                "python.linting.pylintEnabled": true,
+                "python.formatting.autopep8Path": "/home/workflow/.conda/envs/workflow-environment/bin/autopep8",
+                "python.formatting.yapfPath": "/home/workflow/.conda/envs/workflow-environment/bin/yapf",
+                "python.linting.flake8Path": "/home/workflow/.conda/envs/workflow-environment/bin/flake8",
+                "python.linting.pycodestylePath": "/home/workflow/.conda/envs/workflow-environment/bin/pycodestyle",
+                "python.linting.pydocstylePath": "/home/workflow/.conda/envs/workflow-environment/bin/pydocstyle",
+                "python.linting.pylintPath": "/home/workflow/.conda/envs/workflow-environment/bin/pylint",
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "/bin/bash"
+                    }
+                }
+            },
+            "extensions": [
+                "GitHub.copilot",
+                "GitHub.copilot-chat",
+                "hashicorp.terraform"
+            ]
+        }
+    },
+    "remoteUser": "workflow"
+}
