@@ -35,10 +35,6 @@ tf-plan: ## Run Terraform plan
 tf-refresh: ## Run Terraform refresh
 	@ docker-compose run --rm terraform refresh
 
-.PHONY: tf-apply-ecr
-tf-apply-ecr: ## Run Terraform apply only for ECR, since its a dependecy
-	@ docker-compose run --rm terraform apply -target=aws_ecr_repository.de_presigned_url_ecr
-
 .PHONY: tf-apply
 tf-apply: ## Run Terraform apply
 	@ docker-compose run --rm terraform apply
