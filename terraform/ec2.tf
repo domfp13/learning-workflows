@@ -77,25 +77,24 @@ resource "aws_vpc_security_group_ingress_rule" "allow_https" {
 }
 
 // Security Group
-resource "aws_security_group" "my_sg_private" {
-  name        = "${var.project_name}-sg-private"
-  description = "${var.project_name}-sg-private"
-  vpc_id      = aws_vpc.workflow_vpc.id
+# resource "aws_security_group" "my_sg_private" {
+#   name        = "${var.project_name}-sg-private"
+#   description = "${var.project_name}-sg-private"
+#   vpc_id      = aws_vpc.workflow_vpc.id
 
-  tags = {
-    Name = "${var.project_name}-sg-private"
-  }
-}
+#   tags = {
+#     Name = "${var.project_name}-sg-private"
+#   }
+# }
 
-resource "aws_security_group_rule" "allow_all_from_my_sg" {
-  security_group_id        = aws_security_group.my_sg_private.id
-  from_port                = 22
-  to_port                  = 22
-  type                     = "ingress"
-  protocol                 = "tcp"
-  source_security_group_id = aws_security_group.my_sg_public.id // This is the security group that will allow traffic from the other public network
-}
-
+# resource "aws_security_group_rule" "allow_all_from_my_sg" {
+#   security_group_id        = aws_security_group.my_sg_private.id
+#   from_port                = 22
+#   to_port                  = 22
+#   type                     = "ingress"
+#   protocol                 = "tcp"
+#   source_security_group_id = aws_security_group.my_sg_public.id // This is the security group that will allow traffic from the other public network
+# }
 
 // Creating an EC2 instance
 resource "aws_instance" "my_ec2" {
@@ -113,17 +112,17 @@ resource "aws_instance" "my_ec2" {
   }
 }
 
-resource "aws_instance" "my_ec2_private" {
-  ami           = data.aws_ami.latest_amazon_linux.id
-  instance_type = "t2.micro"
-  key_name      = "bastion_public_key_pair"
-  subnet_id     = aws_subnet.private_subnet.id
-  vpc_security_group_ids = [
-    aws_security_group.my_sg_private.id
-  ]
+# resource "aws_instance" "my_ec2_private" {
+#   ami           = data.aws_ami.latest_amazon_linux.id
+#   instance_type = "t2.micro"
+#   key_name      = "bastion_public_key_pair"
+#   subnet_id     = aws_subnet.private_subnet.id
+#   vpc_security_group_ids = [
+#     aws_security_group.my_sg_private.id
+#   ]
 
-  tags = {
-    Name  = "${var.project_name}-ec2-private"
-    Owner = local.tags.Owner
-  }
-}
+#   tags = {
+#     Name  = "${var.project_name}-ec2-private"
+#     Owner = local.tags.Owner
+#   }
+# }
