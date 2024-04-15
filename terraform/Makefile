@@ -15,6 +15,11 @@
 
 .DEFAULT_GOAL := help
 
+.phony: build-docker
+build-docker: ## Build Docker image
+	@ docker build -t prefect-workflow-ecr-repository -f Dockerfile.apache .
+	@ docker push 833695691939.dkr.ecr.us-east-1.amazonaws.com/prefect-workflow-ecr-repository:latest
+
 .PHONY: tf-init
 tf-init: ## Initialize Terraform
 	@ docker-compose run --rm terraform init
@@ -38,6 +43,11 @@ tf-refresh: ## Run Terraform refresh
 .PHONY: tf-apply
 tf-apply: ## Run Terraform apply
 	@ docker-compose run --rm terraform apply
+
+.PHONY: tf-apply-variable
+tf-apply-variable: ## Run Terraform apply with variable from prompt
+	@ read -p "Enter target: " TARGET; \
+	docker-compose run --rm terraform apply -target=$$TARGET
 
 .PHONY: tf-destroy
 tf-destroy: ## Run Terraform destroy
