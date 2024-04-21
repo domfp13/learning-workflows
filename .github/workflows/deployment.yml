@@ -28,4 +28,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ vars.AWS_REGISTRY_URL }}:latest
+          tags: prefect-workflow-ecr-repository:latest,${{ vars.AWS_REGISTRY_URL }}:latest
