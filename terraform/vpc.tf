@@ -1,6 +1,5 @@
 
 // *************** VPC ***************
-
 resource "aws_vpc" "workflow_vpc" {
   cidr_block           = local.vpc_cidr
   enable_dns_support   = true

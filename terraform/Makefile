@@ -53,6 +53,10 @@ tf-apply-variable: ## Run Terraform apply with variable from prompt
 tf-destroy: ## Run Terraform destroy
 	@ docker-compose run --rm terraform destroy
 
+.PHONY: tf-output
+tf-output: ## Run Terraform output
+	@ docker-compose run --rm terraform output
+
 help:
 	@ echo "Please use \`make <target>' where <target> is one of"
 	@ perl -nle'print $& if m{^[a-zA-Z_-]+:.*?## .*$$}' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m  %-25s\033[0m %s\n", $$1, $$2}'

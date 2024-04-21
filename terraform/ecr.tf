@@ -2,6 +2,7 @@
 resource "aws_ecr_repository" "ecr_repository" {
   # Name of the ECR repository. This is passed as a variable.
   name = "${var.project_name}-ecr-repository"
+ 
   # Set to IMMUTABLE to ensure that image tags cannot be overwritten.
   image_tag_mutability = "MUTABLE"
 
@@ -13,8 +14,9 @@ resource "aws_ecr_repository" "ecr_repository" {
   }
 
   tags = {
-    Owner = "Enrique Plata"
-    Team  = "Solutions Architect"
+    Name  = "${var.project_name}-ecr"
+    Owner = local.tags.Owner
+    Team  = "Sr. Solutions Architect"
   }
 
 }
