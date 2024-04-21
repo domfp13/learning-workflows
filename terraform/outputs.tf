@@ -7,11 +7,11 @@
 # Outpout the URL of the created ECR repository.
 output "repository_url" {
   description = "The URL of the created ECR repository"
-  value       = aws_ecr_repository.ecr_repository.repository_url
+  value       = aws_ecr_repository.workflow_ecr.repository_url
 }
 
 # Output the ARN of the created ECR repository.
 output "repository_arn" {
   description = "The ARN of the created ECR repository"
-  value       = aws_ecr_repository.ecr_repository.arn
+  value       = aws_ecr_repository.workflow_ecr.arn
 }
