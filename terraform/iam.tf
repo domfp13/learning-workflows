@@ -12,14 +12,14 @@ resource "aws_iam_policy" "policy-workflow-ecr" {
         Action = [
           "ecr:*",
         ]
-        Effect = "Allow"
-        Resource = aws_ecr_repository.workflow_ecr.arn
+        Effect   = "Allow"
+        Resource = "${aws_ecr_repository.workflow_ecr.arn}:*"
       },
       {
         Action = [
           "ecr:GetAuthorizationToken",
         ]
-        Effect = "Allow"
+        Effect   = "Allow"
         Resource = "*"
       },
     ]
