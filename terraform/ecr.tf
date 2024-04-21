@@ -1,8 +1,8 @@
 # Creating an ECR repository
-resource "aws_ecr_repository" "ecr_repository" {
+resource "aws_ecr_repository" "workflow_ecr" {
   # Name of the ECR repository. This is passed as a variable.
   name = "${var.project_name}-ecr-repository"
- 
+
   # Set to IMMUTABLE to ensure that image tags cannot be overwritten.
   image_tag_mutability = "MUTABLE"
 

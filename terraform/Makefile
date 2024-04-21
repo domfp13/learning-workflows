@@ -15,6 +15,13 @@
 
 .DEFAULT_GOAL := help
 
+<<<<<<< HEAD
+=======
+.PHONY: tf-apply-ecr
+tf-apply-ecr: ## Run Terraform apply only for ECR, since its a dependecy
+	@ docker-compose run --rm terraform apply -target=aws_ecr_repository.workflow_ecr
+
+>>>>>>> e488af2e5ee743fb270766db9b2c98150c4fe450
 .phony: build-docker
 build-docker: ## Build Docker image
 	@ docker build -t prefect-workflow-ecr-repository -f Dockerfile.apache .
