@@ -34,4 +34,5 @@ jobs:
           IMAGE_TAG: prefect-workflow-ecr-repository
         run: |
           docker build -t $IMAGE_TAG .
-          echo $ECR_REGISTRY
+          docker tag $IMAGE_TAG $ECR_REGISTRY/$IMAGE_TAG
+          docker push $ECR_REGISTRY/$IMAGE_TAG
