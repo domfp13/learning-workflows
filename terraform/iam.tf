@@ -13,8 +13,14 @@ resource "aws_iam_policy" "policy-workflow-ecr" {
           "ecr:*",
         ]
         Effect = "Allow"
-        // The resource is the ARN of the ECR repository
         Resource = aws_ecr_repository.workflow_ecr.arn
+      },
+      {
+        Action = [
+          "ecr:GetAuthorizationToken",
+        ]
+        Effect = "Allow"
+        Resource = "*"
       },
     ]
   })
