@@ -28,5 +28,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.AWS_REGISTRY_URL }}/prefect:latest
-
+          tags: ${{ vars.AWS_REGISTRY_URL }}/prefect:latest
