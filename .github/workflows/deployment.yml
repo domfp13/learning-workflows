@@ -30,8 +30,8 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: prefect-workflow-ecr-repository
+          ECR_REGISTRY: ${{ env.AWS_REGISTRY_URL }}
+          IMAGE_TAG: prefect
         run: |
           docker build -t $IMAGE_TAG .
           docker tag $IMAGE_TAG $ECR_REGISTRY/$IMAGE_TAG
