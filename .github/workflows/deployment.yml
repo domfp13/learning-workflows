@@ -34,11 +34,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry  }}
           ECR_REPOSITORY_NAME: ${{ vars.ECR_REPOSITORY_NAME }}
+          IMAGE_TAG: latest
         run: |
-          echo $ECR_REGISTRY
-          echo $IMAGE_TAG
-          echo $ECR_REPOSITORY_NAME
-          docker build -t prefect-workflow .
-          docker tag prefect-workflow $ECR_REGISTRY/$ECR_REPOSITORY_NAME
-          docker images
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG
