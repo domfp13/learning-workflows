@@ -39,6 +39,6 @@ jobs:
           echo $IMAGE_TAG
           echo $ECR_REPOSITORY_NAME
           docker build -t prefect-workflow .
-          docker tag prefect-workflow $ECR_REGISTRY/$ECR_REPOSITORY_NAME/prefect-workflow
+          docker tag prefect-workflow $ECR_REGISTRY/$ECR_REPOSITORY_NAME
           docker images
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME/prefect-workflow
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME

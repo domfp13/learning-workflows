@@ -10,7 +10,13 @@ resource "aws_iam_policy" "policy-workflow-ecr" {
     Statement = [
       {
         Action = [
-          "ecr:*",
+          "ecr:BatchGetImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:CompleteLayerUpload",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:InitiateLayerUpload",
+          "ecr:PutImage",
+          "ecr:UploadLayerPart"
         ]
         Effect   = "Allow"
         Resource = "${aws_ecr_repository.workflow_ecr.arn}:*"
