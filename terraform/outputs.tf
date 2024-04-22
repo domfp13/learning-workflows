@@ -15,3 +15,9 @@ output "repository_arn" {
   description = "The ARN of the created ECR repository"
   value       = aws_ecr_repository.workflow_ecr.arn
 }
+
+# Output the name of the created ECR repository.
+output "repository_name" {
+  description = "The name of the created ECR repository"
+  value       = aws_ecr_repository.workflow_ecr.name
+}
