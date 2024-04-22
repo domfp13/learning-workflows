@@ -34,7 +34,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry  }}
           IMAGE_TAG: ${{ github.sha }}
-          ECR_REPOSITORY_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
+          ECR_REPOSITORY_NAME: ${{ vars.ECR_REPOSITORY_NAME }}
         run: |
           echo $ECR_REGISTRY
           echo $IMAGE_TAG
