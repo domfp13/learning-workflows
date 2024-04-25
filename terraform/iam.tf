@@ -13,7 +13,7 @@ resource "aws_iam_policy" "policy-workflow-ecr" {
           "ecr:*"
         ]
         Effect   = "Allow"
-        Resource = "*"
+        Resource = "${aws_ecr_repository.workflow_ecr.arn}*" # TODO: This should be the ARN of the ECR repository but it was producing an error
       },
       {
         Action = [

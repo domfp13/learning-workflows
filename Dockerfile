@@ -7,7 +7,7 @@ RUN yum update -y && \
  mkdir -p /var/lock/httpd
 
 # Install apache and write hello world message
-RUN echo 'Hello World!' > /var/www/html/index.html
+RUN echo 'Hello World x2!' > /var/www/html/index.html
 
 # Configure apache
 RUN echo 'ServerName localhost' >> /etc/httpd/conf/httpd.conf && \
