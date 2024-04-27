@@ -23,22 +23,22 @@
 # }
 
 // Security Group
-# resource "aws_security_group" "my_sg_public" {
-#   name        = "${var.project_name}-sg"
-#   description = "${var.project_name}-sg"
-#   vpc_id      = aws_vpc.workflow_vpc.id
+resource "aws_security_group" "my_sg_public" {
+  name        = "${var.project_name}-sg"
+  description = "${var.project_name}-sg"
+  vpc_id      = aws_vpc.workflow_vpc.id
 
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-#   tags = {
-#     Name = "${var.project_name}-sg"
-#   }
-# }
+  tags = {
+    Name = "${var.project_name}-sg"
+  }
+}
 
 # resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
 #   security_group_id = aws_security_group.my_sg_public.id
@@ -52,17 +52,17 @@
 #   }
 # }
 
-# resource "aws_vpc_security_group_ingress_rule" "allow_http" {
-#   security_group_id = aws_security_group.my_sg_public.id
-#   from_port         = 80
-#   to_port           = 80
-#   ip_protocol       = "tcp"
-#   cidr_ipv4         = "0.0.0.0/0"
+resource "aws_vpc_security_group_ingress_rule" "allow_http" {
+  security_group_id = aws_security_group.my_sg_public.id
+  from_port         = 80
+  to_port           = 80
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
 
-#   tags = {
-#     Name = "${var.project_name}-sg-ingress-rule-http"
-#   }
-# }
+  tags = {
+    Name = "${var.project_name}-sg-ingress-rule-http"
+  }
+}
 
 # resource "aws_vpc_security_group_ingress_rule" "allow_https" {
 #   security_group_id = aws_security_group.my_sg_public.id

@@ -38,3 +38,5 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG
+          # docker buildx create --use # TODO: Maybe to try out in other occation
+          # docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG . --push 
