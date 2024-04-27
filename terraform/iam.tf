@@ -10,17 +10,24 @@ resource "aws_iam_policy" "policy-workflow-ecr" {
     Statement = [
       {
         Action = [
-          "ecr:*",
+          "ecr:*"
         ]
-        Effect = "Allow"
-        // The resource is the ARN of the ECR repository
-        Resource = aws_ecr_repository.workflow_ecr.arn
+        Effect   = "Allow"
+        Resource = "${aws_ecr_repository.workflow_ecr.arn}*"
+      },
+      {
+        Action = [
+          "ecr:GetAuthorizationToken",
+        ]
+        Effect   = "Allow"
+        Resource = "*"
       },
     ]
   })
 }
 
 // Create user that will be used by Github Actions
+// Note: AWS Credentials need to be generated after running Terraform for the first time
 resource "aws_iam_user" "workflow-ecr-user" {
   name = "${var.project_name}-ecr-github-user"
 }
@@ -29,4 +36,62 @@ resource "aws_iam_user" "workflow-ecr-user" {
 resource "aws_iam_user_policy_attachment" "workflow-ecr-user-policy" {
   user       = aws_iam_user.workflow-ecr-user.name
   policy_arn = aws_iam_policy.policy-workflow-ecr.arn
+}
+
+// Creating Task Exectuion Role for ECS Task Definition
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "${var.project_name}-ecs-task-execution-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+        Effect = "Allow"
+      },
+    ]
+  })
+}
+
+// Creating a policy that allows full access to the ECR repository and logs
+resource "aws_iam_policy" "ecr_full_access_policy" {
+  name        = "${var.project_name}-ecr-full-access-policy"
+  description = "Allows full access to ECR repository in the worlflow-prefect project"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ecr:*"
+        ]
+        Resource = "${aws_ecr_repository.workflow_ecr.arn}",
+        Effect   = "Allow"
+      },
+      {
+        Action = [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "${aws_cloudwatch_log_group.cloudwatch_workflow_log_group.arn}*",
+        Effect   = "Allow"
+      },
+      {
+        Action = [
+          "ecr:GetAuthorizationToken"
+        ]
+        Resource = "*"
+        Effect   = "Allow"
+      }
+    ]
+  })
+}
+
+// Attaching the policy to the ECS Task Execution Role
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.ecr_full_access_policy.arn
 }
