@@ -22,8 +22,6 @@ data "aws_ami" "latest_amazon_linux" {
   owners = ["amazon"]
 }
 
-
-
 // Security Group
 resource "aws_security_group" "my_sg_public" {
   name        = "${var.project_name}-sg"
@@ -99,25 +97,23 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
 # }
 
 // Creating an EC2 instance
-resource "aws_instance" "my_ec2" {
-  ami           = data.aws_ami.latest_amazon_linux.id
-  instance_type = "t2.micro"
-  key_name      = "bastion_public_key_pair"
-  subnet_id     = aws_subnet.public_subnet.id
+# resource "aws_instance" "my_ec2" {
+#   ami           = data.aws_ami.latest_amazon_linux.id
+#   instance_type = "t2.micro"
+#   key_name      = "bastion_public_key_pair"
+#   subnet_id     = aws_subnet.public_subnet.id
 
-  vpc_security_group_ids = [
-    aws_security_group.my_sg_public.id
-  ]
+#   vpc_security_group_ids = [
+#     aws_security_group.my_sg_public.id
+#   ]
 
-  user_data = base64decode(
-    file("${path.module}/scripts/install_nginx.sh")
-  )
+#   user_data = file("./scripts/bootstrap.sh")
 
-  tags = {
-    Name  = "${var.project_name}-ec2-public"
-    Owner = local.tags.Owner
-  }
-}
+#   tags = {
+#     Name  = "${var.project_name}-ec2-public"
+#     Owner = local.tags.Owner
+#   }
+# }
 
 # resource "aws_instance" "my_ec2_private" {
 #   ami           = data.aws_ami.latest_amazon_linux.id

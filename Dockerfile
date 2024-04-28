@@ -17,3 +17,8 @@ RUN echo 'ServerName localhost' >> /etc/httpd/conf/httpd.conf && \
 EXPOSE 80
 
 CMD ["/root/run_apache.sh"]
+
+# TODO: Add a prefect worker
+# TODO: Add a application load balancer
+# TODO: Add cloudflair for security
+# TODO: Create my own domain
