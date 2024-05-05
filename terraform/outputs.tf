@@ -1,9 +1,9 @@
 
 // Output of the EC2 address
-# output "ec2_public_ip" {
-#   description = "The public IP of the EC2 instance"
-#   value       = aws_instance.my_ec2.public_dns
-# }
+output "ec2_public_ip" {
+  description = "The public IP of the EC2 instance"
+  value       = aws_instance.ec2_worker.public_dns
+}
 
 # Outpout the URL of the created ECR repository.
 output "repository_uri" {

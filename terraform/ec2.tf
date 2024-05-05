@@ -1,8 +1,8 @@
 // *************** key pair ***************
-# resource "aws_key_pair" "mykey" {
-#   key_name   = "bastion_public_key_pair"
-#   public_key = file("~/.ssh/id_rsa.pub")
-# }
+resource "aws_key_pair" "bastion_public_key_pair" {
+  key_name   = "bastion_public_key_pair"
+  public_key = file("/root/.ssh/id_rsa.pub")
+}
 
 // *************** EC2 ***************
 
@@ -97,23 +97,26 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
 # }
 
 // Creating an EC2 instance
-# resource "aws_instance" "my_ec2" {
-#   ami           = data.aws_ami.latest_amazon_linux.id
-#   instance_type = "t2.micro"
-#   key_name      = "bastion_public_key_pair"
-#   subnet_id     = aws_subnet.public_subnet.id
+resource "aws_instance" "ec2_worker" {
+  ami           = data.aws_ami.latest_amazon_linux.id
+  instance_type = "t2.micro"
+  key_name      = "bastion_public_key_pair"
+  subnet_id     = aws_subnet.public_subnet.id
 
-#   vpc_security_group_ids = [
-#     aws_security_group.my_sg_public.id
-#   ]
+  vpc_security_group_ids = [
+    aws_security_group.my_sg_public.id
+  ]
 
-#   user_data = file("./scripts/bootstrap.sh")
+  # Associate the IAM role with the EC2 instance
+  iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
 
-#   tags = {
-#     Name  = "${var.project_name}-ec2-public"
-#     Owner = local.tags.Owner
-#   }
-# }
+  user_data = file("./scripts/bootstrap.sh")
+
+  tags = {
+    Name  = "${var.project_name}-ec2-public"
+    Owner = local.tags.Owner
+  }
+}
 
 # resource "aws_instance" "my_ec2_private" {
 #   ami           = data.aws_ami.latest_amazon_linux.id

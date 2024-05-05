@@ -38,6 +38,62 @@ resource "aws_iam_user_policy_attachment" "workflow-ecr-user-policy" {
   policy_arn = aws_iam_policy.policy-workflow-ecr.arn
 }
 
+// Create a ECR_Repository iam role that will allow the Ec2 instance to pull the image from the ECR repository
+resource "aws_iam_role" "ec2_role" {
+  name = "${var.project_name}-ec2-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Effect = "Allow"
+      },
+    ]
+  })
+}
+
+// Create a policy that allows the Ec2 instance to pull the image from the ECR repository
+resource "aws_iam_policy" "ec2_policy" {
+  name        = "${var.project_name}-ec2-policy"
+  description = "Allows the EC2 instance to interact with different AWS services"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ecr:*"
+        ]
+        Resource = "${aws_ecr_repository.workflow_ecr.arn}",
+        Effect   = "Allow"
+      },
+      {
+        Action = [
+          "ecr:GetAuthorizationToken"
+        ]
+        Resource = "*"
+        Effect   = "Allow"
+      },
+    ]
+  })
+}
+
+// Attach the policy to the role
+resource "aws_iam_role_policy_attachment" "ec2_role_policy" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = aws_iam_policy.ec2_policy.arn
+}
+
+// Creating an instance profile so the role can be attached to the EC2 instance
+resource "aws_iam_instance_profile" "ec2_instance_profile" {
+  name = "${var.project_name}-ec2-instance-profile"
+  role = aws_iam_role.ec2_role.name
+}
+
 // Creating Task Exectuion Role for ECS Task Definition
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "${var.project_name}-ecs-task-execution-role"

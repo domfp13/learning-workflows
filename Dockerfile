@@ -18,6 +18,7 @@ EXPOSE 80
 
 CMD ["/root/run_apache.sh"]
 
+# TODO: enable ec2 pull from ec2
 # TODO: Add a prefect worker
 # TODO: Add a application load balancer
 # TODO: Add cloudflair for security
