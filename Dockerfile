@@ -1,25 +1,20 @@
-FROM public.ecr.aws/amazonlinux/amazonlinux:latest
+# Using the specific version of Prefect with Python 3.10
+FROM prefecthq/prefect:2-python3.10
+ENV APP_HOME=/opt/prefect/flows
 
-# Install dependencies
-RUN yum update -y && \
- yum install -y httpd && \
- mkdir -p /var/run/httpd && \
- mkdir -p /var/lock/httpd
+# Add our requirements.txt file to the image and install dependencies
+COPY requirements.txt .
+RUN pip install -r requirements.txt --trusted-host pypi.python.org --no-cache-dir
 
-# Install apache and write hello world message
-RUN echo 'Hello World!' > /var/www/html/index.html
+# Copy the start.sh script to the image
+COPY start.sh /start.sh
+# Make the start.sh script executable
+RUN chmod +x /start.sh
 
-# Configure apache
-RUN echo 'ServerName localhost' >> /etc/httpd/conf/httpd.conf && \
- echo -e "#!/bin/sh\nmkdir -p /var/run/httpd\nmkdir -p /var/lock/httpd\n/usr/sbin/httpd -D FOREGROUND" > /root/run_apache.sh && \
- chmod 755 /root/run_apache.sh
+# Run the start.sh script when the container starts
+CMD ["/bin/bash", "/start.sh"]
 
-EXPOSE 80
+# Add our flow code to the image
+COPY flows /opt/prefect/flows
 
-CMD ["/root/run_apache.sh"]
-
-# TODO: enable ec2 pull from ec2
-# TODO: Add a prefect worker
-# TODO: Add a application load balancer
-# TODO: Add cloudflair for security
-# TODO: Create my own domain
+WORKDIR ${APP_HOME}

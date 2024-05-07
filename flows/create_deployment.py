@@ -6,6 +6,6 @@ if __name__ == "__main__":
         entrypoint="my_gh_workflow.py:repo_info",
     ).deploy(
         name="my-first-deployment",
-        work_pool_name="my-managed-pool",
+        work_pool_name="my-ec2-pool",
         cron="0 1 * * *",
     )
