@@ -1,26 +1,26 @@
 // *************** key pair ***************
-# resource "aws_key_pair" "mykey" {
-#   key_name   = "mykey"
-#   public_key = file("~/.ssh/id_rsa.pub")
-# }
+resource "aws_key_pair" "bastion_public_key_pair" {
+  key_name   = "bastion_public_key_pair"
+  public_key = file("/root/.ssh/id_rsa.pub")
+}
 
 // *************** EC2 ***************
 
 // Getting latest Amazon Linux AMI
-# data "aws_ami" "latest_amazon_linux" {
-#   most_recent = true
-#   filter {
-#     name   = "name"
-#     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-#   }
+data "aws_ami" "latest_amazon_linux" {
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
 
-#   filter {
-#     name   = "virtualization-type"
-#     values = ["hvm"]
-#   }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
 
-#   owners = ["amazon"]
-# }
+  owners = ["amazon"]
+}
 
 // Security Group
 resource "aws_security_group" "my_sg_public" {
@@ -40,17 +40,17 @@ resource "aws_security_group" "my_sg_public" {
   }
 }
 
-# resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
-#   security_group_id = aws_security_group.my_sg_public.id
-#   from_port         = 22
-#   to_port           = 22
-#   ip_protocol       = "tcp"
-#   cidr_ipv4         = "0.0.0.0/0"
+resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
+  security_group_id = aws_security_group.my_sg_public.id
+  from_port         = 22
+  to_port           = 22
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
 
-#   tags = {
-#     Name = "${var.project_name}-sg-ingress-rule-ssh"
-#   }
-# }
+  tags = {
+    Name = "${var.project_name}-sg-ingress-rule-ssh"
+  }
+}
 
 resource "aws_vpc_security_group_ingress_rule" "allow_http" {
   security_group_id = aws_security_group.my_sg_public.id
@@ -97,20 +97,26 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
 # }
 
 // Creating an EC2 instance
-# resource "aws_instance" "my_ec2" {
-#   ami           = data.aws_ami.latest_amazon_linux.id
-#   instance_type = "t2.micro"
-#   key_name      = "bastion_public_key_pair"
-#   subnet_id     = aws_subnet.public_subnet.id
-#   vpc_security_group_ids = [
-#     aws_security_group.my_sg_public.id
-#   ]
+resource "aws_instance" "ec2_worker" {
+  ami           = data.aws_ami.latest_amazon_linux.id
+  instance_type = "t2.micro"
+  key_name      = "bastion_public_key_pair"
+  subnet_id     = aws_subnet.public_subnet.id
 
-#   tags = {
-#     Name  = "${var.project_name}-ec2-public"
-#     Owner = local.tags.Owner
-#   }
-# }
+  vpc_security_group_ids = [
+    aws_security_group.my_sg_public.id
+  ]
+
+  # Associate the IAM role with the EC2 instance
+  iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
+
+  user_data = file("./scripts/bootstrap.sh")
+
+  tags = {
+    Name  = "${var.project_name}-ec2-public"
+    Owner = local.tags.Owner
+  }
+}
 
 # resource "aws_instance" "my_ec2_private" {
 #   ami           = data.aws_ami.latest_amazon_linux.id
