@@ -1,39 +1,32 @@
 import httpx   # an HTTP client library and dependency of Prefect
 from prefect import flow, task
-
-
-@task(retries=2)
-def get_repo_info(repo_owner: str, repo_name: str):
-    """Get info about a repo - will retry twice after failing"""
-    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}"
-    api_response = httpx.get(url)
-    api_response.raise_for_status()
-    repo_info = api_response.json()
-    return repo_info
-
+from typing import Optional
 
 @task
-def get_contributors(repo_info: dict):
-    """Get contributors for a repo"""
-    contributors_url = repo_info["contributors_url"]
-    response = httpx.get(contributors_url)
+def get_posts():
+    """Get a list of posts"""
+    response = httpx.get('https://jsonplaceholder.typicode.com/posts')
     response.raise_for_status()
-    contributors = response.json()
-    return contributors
+    return response.json()
 
+@task
+def create_post():
+    """Create a new post"""
+    post_data = {
+        "title": "foo",
+        "body": "bar",
+        "userId": 1
+    }
+    response = httpx.post('https://jsonplaceholder.typicode.com/posts', json=post_data)
+    response.raise_for_status()
+    return response.json()
 
-@flow(log_prints=True)
-def repo_info(repo_owner: str = "PrefectHQ", repo_name: str = "prefect"):
-    """
-    Given a GitHub repository, logs the number of stargazers
-    and contributors for that repo.
-    """
-    repo_info = get_repo_info(repo_owner, repo_name)
-    print(f"Stars 🌠 : {repo_info['stargazers_count']}")
-
-    contributors = get_contributors(repo_info)
-    print(f"Number of contributors 👷: {len(contributors)}")
-
+@flow(retries=3, retry_delay_seconds=5, log_prints=True)
+def post_flow():
+    print("Starting Prefect 🤓")
+    posts = get_posts()
+    new_post = create_post()
+    print(f"New post created: {new_post}")
 
 if __name__ == "__main__":
-    repo_info()
+    post_flow()

@@ -2,7 +2,9 @@
 
 # Adding commands that should be run when the container starts
 prefect cloud login -k $PREFECT_API_KEY
-prefect worker start --pool 'my-ec2-pool' --type docker
 
-# Run our flow script when the container starts
-# CMD ["/bin/sh", "-c", "pip install prefect-aws && prefect worker start --pool my-ec2-pool --type ec2"]
+# Creates a new work-pool, if the pool already exists it will skip this command
+prefect work-pool create --type docker my-docker-pool
+
+# Starts a new worker with the specified pool
+prefect worker start --pool my-docker-pool

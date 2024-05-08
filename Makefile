@@ -14,18 +14,20 @@
 #  4. Restart all Git Bash/Terminal windows.
 
 .DEFAULT_GOAL := help
+include .env
+export
 
-.PHONY: docker-run
-docker-run: ## Run docker container
+.PHONY: docker-run-master
+docker-run-master: ## Run docker container
 	@ docker build -t prefect-docker .
-	@ docker run --name prefect-worker -itd -e PREFECT_API_KEY=pnu_0YAZTwR33RmYzhzzlMnbN9MjIBJqsW01UlmR prefect-docker
+	@ docker run --name prefect-worker -itd -e PREFECT_API_KEY=${PREFECT_API_KEY} -v $(PWD)/flows:/opt/prefect/flows prefect-docker
 
-.PHONY: docker-rm
-docker-rm: ## Remove docker container
+.PHONY: docker-rm-master
+docker-rm-master: ## Remove docker container
 	@ docker rm -f prefect-worker
 
-.PHONY: docker-it
-docker-it: ## Run docker container in interactive mode
+.PHONY: docker-it-master
+docker-it-master: ## Run docker container in interactive mode
 	@ docker exec -it prefect-worker /bin/bash
 
 help:
