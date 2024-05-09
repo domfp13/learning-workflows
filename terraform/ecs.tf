@@ -84,16 +84,17 @@ TASK_DEFINITION
   }
 }
 
-resource "aws_ecs_service" "ecs_service" {
-  name            = "${var.project_name}-ecs-service"
-  cluster         = aws_ecs_cluster.ecs_workflow_cluster.id
-  task_definition = aws_ecs_task_definition.ecs-task-definition.arn
-  desired_count   = 1
-  depends_on      = [aws_iam_role.ecs_task_execution_role]
+// ECS Service Fargate
+# resource "aws_ecs_service" "ecs_service" {
+#   name            = "${var.project_name}-ecs-service"
+#   cluster         = aws_ecs_cluster.ecs_workflow_cluster.id
+#   task_definition = aws_ecs_task_definition.ecs-task-definition.arn
+#   desired_count   = 1
+#   depends_on      = [aws_iam_role.ecs_task_execution_role]
 
-  network_configuration {
-    subnets          = [aws_subnet.public_subnet.id]
-    security_groups  = [aws_security_group.my_sg_public.id]
-    assign_public_ip = true
-  }
-}
+#   network_configuration {
+#     subnets          = [aws_subnet.public_subnet.id]
+#     security_groups  = [aws_security_group.my_sg_public.id]
+#     assign_public_ip = true
+#   }
+# }
