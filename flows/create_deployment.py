@@ -10,5 +10,5 @@ if __name__ == "__main__":
         version="tutorial/deployments",
     ).deploy(
         name="my-first-deployment",
-        work_pool_name="my-docker-pool", 
+        work_pool_name="docker-pool", 
     )
