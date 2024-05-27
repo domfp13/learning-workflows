@@ -1,4 +1,11 @@
 terraform {
+  cloud {
+    organization = "infoinsights"
+
+    workspaces {
+      name = "prefect-workflow"
+    }
+  }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
