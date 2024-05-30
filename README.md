@@ -15,3 +15,5 @@ Follow the instructions to get the project up and running (This instructins are 
         * ECR_REPOSITORY_NAME (use repository_name from the output from before). This is a VARIABLE.
         * AWS_ACCESS_KEY_ID (Secret) for the user created.
         * AWS_SECRET_ACCESS_KEY (Secret) for the user created.
+    * Push changes to a remote branch so the the image is build and push the registry.
+    
