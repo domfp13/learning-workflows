@@ -15,14 +15,10 @@
 
 .DEFAULT_GOAL := help
 
+# TODO: REMOVE THIS INSTEAD USE THE tf-apply-target, also change the documentation
 .PHONY: tf-apply-ecr
 tf-apply-ecr: ## Run Terraform apply only for ECR, since its a dependecy
 	@ docker-compose run --rm terraform apply -target=aws_ecr_repository.workflow_ecr
-
-.phony: build-docker
-build-docker: ## Build Docker image
-	@ docker build -t prefect-workflow-ecr-repository -f Dockerfile.apache .
-	@ docker push 833695691939.dkr.ecr.us-east-1.amazonaws.com/prefect-workflow-ecr-repository:latest
 
 .PHONY: tf-init
 tf-init: ## Initialize Terraform
@@ -40,6 +36,7 @@ tf-validate: ## Validate Terraform file is valid
 tf-plan: ## Run Terraform plan
 	@ docker-compose run --rm terraform plan
 
+# Refresh does not modify the state file, it only updates the state file with the current state of the infrastructure
 .PHONY: tf-refresh
 tf-refresh: ## Run Terraform refresh
 	@ docker-compose run --rm terraform refresh
@@ -48,14 +45,19 @@ tf-refresh: ## Run Terraform refresh
 tf-apply: ## Run Terraform apply
 	@ docker-compose run --rm terraform apply
 
-.PHONY: tf-apply-variable
-tf-apply-variable: ## Run Terraform apply with variable from prompt
+.PHONY: tf-apply-target
+tf-apply-target: ## Run Terraform apply with variable from prompt (TARGET eg. aws_key_pair.bastion_public_key_pair)
 	@ read -p "Enter target: " TARGET; \
 	docker-compose run --rm terraform apply -target=$$TARGET
 
 .PHONY: tf-destroy
 tf-destroy: ## Run Terraform destroy
 	@ docker-compose run --rm terraform destroy
+
+.PHONY: tf-destroy-target
+tf-destroy-target: ## Run Terraform destroy with variable from prompt (TARGET eg. aws_key_pair.bastion_public_key_pair)
+	@ read -p "Enter target: " TARGET; \
+	docker-compose run --rm terraform destroy -target=$$TARGET
 
 .PHONY: tf-output
 tf-output: ## Run Terraform output
