@@ -4,6 +4,7 @@ services:
     volumes:
       - .:/infra
       - ~/.ssh:/root/.ssh
+      - /Users/enriquep/.terraform.d/credentials.tfrc.json:/root/.terraform.d/credentials.tfrc.json
     working_dir: /infra
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
